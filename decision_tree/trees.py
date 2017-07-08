@@ -3,8 +3,11 @@
 # Author: PytLab <shaozhengjiang@gmail.com>
 # Date: 2017-07-07
 
+import copy
+import uuid
+from collections import defaultdict, namedtuple
 from math import log2
-from collections import defaultdict
+
 
 class DecisionTreeClassifier(object):
     ''' 使用ID3算法划分数据集的决策树分类器
@@ -52,8 +55,10 @@ class DecisionTreeClassifier(object):
         entropy_gains = []
         for i in range(feat_num):
             splited_dict = self.split_dataset(dataset, classes, i)
-            new_entropy = sum([self.get_shanno_entropy(sub_classes)
-                for feat, (sub_datset, sub_classes) in splited_dict.items()])
+            new_entropy = sum([
+                len(sub_classes)/len(classes)*self.get_shanno_entropy(sub_classes)
+                for _, (_, sub_classes) in splited_dict.items()
+            ])
             entropy_gains.append(base_entropy - new_entropy)
 
         return entropy_gains.index(max(entropy_gains))
@@ -67,7 +72,7 @@ class DecisionTreeClassifier(object):
 
         return max(cls_num)
 
-    def create_tree(self, dataset, feat_names, classes):
+    def create_tree(self, dataset, classes, feat_names):
         ''' 根据当前数据集递归创建决策树
 
         :param dataset: 数据集
@@ -97,7 +102,81 @@ class DecisionTreeClassifier(object):
         splited_dict = self.split_dataset(dataset, classes, best_feat_idx)
         for feat_val, (sub_dataset, sub_classes) in splited_dict.items():
             tree[feature][feat_val] = self.create_tree(sub_dataset,
-                                                       sub_feat_names,
-                                                       sub_classes)
+                                                       sub_classes,
+                                                       sub_feat_names)
+        self.tree = tree
+        self.feat_names = feat_names
+
         return tree
+
+    def get_nodes_edges(self, tree=None, root_node=None):
+        ''' 返回树中所有节点和边
+        '''
+        Node = namedtuple('Node', ['id', 'label'])
+        Edge = namedtuple('Edge', ['start', 'end', 'label'])
+
+        if tree is None:
+            tree = self.tree
+
+        if type(tree) is not dict:
+            return [], []
+
+        nodes, edges = [], []
+
+        if root_node is None:
+            label = list(tree.keys())[0]
+            root_node = Node._make([uuid.uuid4(), label])
+            nodes.append(root_node)
+
+        for edge_label, sub_tree in tree[root_node.label].items():
+            node_label = list(sub_tree.keys())[0] if type(sub_tree) is dict else sub_tree
+            sub_node = Node._make([uuid.uuid4(), node_label])
+            nodes.append(sub_node)
+
+            edge = Edge._make([root_node, sub_node, edge_label])
+            edges.append(edge)
+
+            sub_nodes, sub_edges = self.get_nodes_edges(sub_tree, root_node=sub_node)
+            nodes.extend(sub_nodes)
+            edges.extend(sub_edges)
+
+        return nodes, edges
+
+    def dotify(self, tree=None):
+        ''' 获取树的Graphviz Dot文件的内容
+        '''
+        if tree is None:
+            tree = self.tree
+
+        content = 'digraph decision_tree {\n'
+        nodes, edges = self.get_nodes_edges(tree)
+
+        for node in nodes:
+            content += '    "{}" [label="{}"];\n'.format(node.id, node.label)
+
+        for edge in edges:
+            start, label, end = edge.start, edge.label, edge.end
+            content += '    "{}" -> "{}" [label="{}"];\n'.format(start.id, end.id, label)
+        content += '}'
+
+        return content
+
+    def classify(self, data_vect, feat_names=None, tree=None):
+        ''' 根据构建的决策树对数据进行分类
+        '''
+        if tree is None:
+            tree = self.tree
+
+        if feat_names is None:
+            feat_names = self.feat_names
+
+        # Recursive base case.
+        if type(tree) is not dict:
+            return tree
+
+        feature = list(tree.keys())[0]
+        value = data_vect[feat_names.index(feature)]
+        sub_tree = tree[feature][value]
+
+        return self.classify(feat_names, data_vect, sub_tree)
 

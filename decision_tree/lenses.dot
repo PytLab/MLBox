@@ -1,0 +1,31 @@
+digraph decision_tree {
+    "99d3b650-7557-420c-be5f-037403909eef" [label="tearRate"];
+    "ccf5c62e-14ca-4cef-9525-4b8f026622dc" [label="no lenses"];
+    "6a72f3f9-51ce-4433-b052-34765c65a61e" [label="astigmatic"];
+    "91ea78df-9cfd-4334-a592-1c8b3c193f0d" [label="age"];
+    "b5d2e2b7-241b-4c46-a56b-61ba9a1e7678" [label="soft"];
+    "62193a33-c49d-4bce-b820-1613685e09ce" [label="soft"];
+    "01240d64-7b96-40fc-9a4b-185cc0fca9d6" [label="prescript"];
+    "5571119a-43b5-414e-9bf5-c9c62a9dee8c" [label="soft"];
+    "087246f9-495f-44ef-8ea0-5043b238c1c1" [label="no lenses"];
+    "c0b04ca3-692d-4498-8292-165ed4997ce5" [label="prescript"];
+    "8f6cfe1f-a0ea-46de-a456-f3f8b35bca8d" [label="age"];
+    "4d2b5c7f-e85e-4d44-8da9-0d88de048430" [label="hard"];
+    "cdc375a5-561f-48c9-a847-ccc73f1cc44c" [label="no lenses"];
+    "4600fda0-b8a8-45cc-8174-d554de9b7e84" [label="no lenses"];
+    "08a19fa5-952c-4ab3-a283-dbfe2e3e5870" [label="hard"];
+    "99d3b650-7557-420c-be5f-037403909eef" -> "ccf5c62e-14ca-4cef-9525-4b8f026622dc" [label="reduced"];
+    "99d3b650-7557-420c-be5f-037403909eef" -> "6a72f3f9-51ce-4433-b052-34765c65a61e" [label="normal"];
+    "6a72f3f9-51ce-4433-b052-34765c65a61e" -> "91ea78df-9cfd-4334-a592-1c8b3c193f0d" [label="no"];
+    "91ea78df-9cfd-4334-a592-1c8b3c193f0d" -> "b5d2e2b7-241b-4c46-a56b-61ba9a1e7678" [label="young"];
+    "91ea78df-9cfd-4334-a592-1c8b3c193f0d" -> "62193a33-c49d-4bce-b820-1613685e09ce" [label="pre"];
+    "91ea78df-9cfd-4334-a592-1c8b3c193f0d" -> "01240d64-7b96-40fc-9a4b-185cc0fca9d6" [label="presbyopic"];
+    "01240d64-7b96-40fc-9a4b-185cc0fca9d6" -> "5571119a-43b5-414e-9bf5-c9c62a9dee8c" [label="hyper"];
+    "01240d64-7b96-40fc-9a4b-185cc0fca9d6" -> "087246f9-495f-44ef-8ea0-5043b238c1c1" [label="myope"];
+    "6a72f3f9-51ce-4433-b052-34765c65a61e" -> "c0b04ca3-692d-4498-8292-165ed4997ce5" [label="yes"];
+    "c0b04ca3-692d-4498-8292-165ed4997ce5" -> "8f6cfe1f-a0ea-46de-a456-f3f8b35bca8d" [label="hyper"];
+    "8f6cfe1f-a0ea-46de-a456-f3f8b35bca8d" -> "4d2b5c7f-e85e-4d44-8da9-0d88de048430" [label="young"];
+    "8f6cfe1f-a0ea-46de-a456-f3f8b35bca8d" -> "cdc375a5-561f-48c9-a847-ccc73f1cc44c" [label="pre"];
+    "8f6cfe1f-a0ea-46de-a456-f3f8b35bca8d" -> "4600fda0-b8a8-45cc-8174-d554de9b7e84" [label="presbyopic"];
+    "c0b04ca3-692d-4498-8292-165ed4997ce5" -> "08a19fa5-952c-4ab3-a283-dbfe2e3e5870" [label="myope"];
+}
