@@ -5,6 +5,7 @@
 
 import copy
 import uuid
+import pickle
 from collections import defaultdict, namedtuple
 from math import log2
 
@@ -179,4 +180,21 @@ class DecisionTreeClassifier(object):
         sub_tree = tree[feature][value]
 
         return self.classify(feat_names, data_vect, sub_tree)
+
+    def dump_tree(self, filename, tree=None):
+        ''' 存储决策树
+        '''
+        if tree is None:
+            tree = self.tree
+
+        with open(filename, 'w') as f:
+            pickle.dump(tree, f)
+
+    def load_tree(self, filename):
+        ''' 加载树结构
+        '''
+        with open(filename, 'r') as f:
+            tree = pickle.load(f)
+            self.tree = tree
+        return tree
 
