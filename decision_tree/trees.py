@@ -71,7 +71,7 @@ class DecisionTreeClassifier(object):
         for cls in classes:
             cls_num[cls] += 1
 
-        return max(cls_num)
+        return max(cls_num, key=cls_num.get)
 
     def create_tree(self, dataset, classes, feat_names):
         ''' 根据当前数据集递归创建决策树
