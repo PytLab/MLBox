@@ -1,0 +1,31 @@
+digraph decision_tree {
+    "959b4c0c-1821-446d-94a1-c619c2decfcd" [label="call"];
+    "18665160-b058-437f-9b2e-05df2eb55661" [label="to"];
+    "2eb9860d-d241-45ca-85e6-cbd80fe2ebf7" [label="your"];
+    "bcbcc17c-9e2a-4bd4-a039-6e51fde5f8fd" [label="areyouunique"];
+    "ca091fc7-8a4e-4970-9ec3-485a4628ad29" [label="02073162414"];
+    "aac20872-1aac-499d-b2b5-caf0ef56eff3" [label="ham"];
+    "18aa8685-a6e8-4d76-bad5-ccea922bb14d" [label="spam"];
+    "3f7f30b1-4dbb-4459-9f25-358ad3c6d50b" [label="spam"];
+    "44d1f972-cd97-4636-b6e6-a389bf560656" [label="spam"];
+    "7f3c8562-69b5-47a9-8ee4-898bd4b6b506" [label="i"];
+    "a6f22325-8841-4a81-bc04-4e7485117aa1" [label="spam"];
+    "c181fe42-fd3c-48db-968a-502f8dd462a4" [label="ldn"];
+    "51b9477a-0326-4774-8622-24d1d869a283" [label="ham"];
+    "16f6aecd-c675-4291-867c-6c64d27eb3fc" [label="spam"];
+    "adb05303-813a-4fe0-bf98-c319eb70be48" [label="spam"];
+    "959b4c0c-1821-446d-94a1-c619c2decfcd" -> "18665160-b058-437f-9b2e-05df2eb55661" [label="0"];
+    "18665160-b058-437f-9b2e-05df2eb55661" -> "2eb9860d-d241-45ca-85e6-cbd80fe2ebf7" [label="0"];
+    "2eb9860d-d241-45ca-85e6-cbd80fe2ebf7" -> "bcbcc17c-9e2a-4bd4-a039-6e51fde5f8fd" [label="0"];
+    "bcbcc17c-9e2a-4bd4-a039-6e51fde5f8fd" -> "ca091fc7-8a4e-4970-9ec3-485a4628ad29" [label="0"];
+    "ca091fc7-8a4e-4970-9ec3-485a4628ad29" -> "aac20872-1aac-499d-b2b5-caf0ef56eff3" [label="0"];
+    "ca091fc7-8a4e-4970-9ec3-485a4628ad29" -> "18aa8685-a6e8-4d76-bad5-ccea922bb14d" [label="1"];
+    "bcbcc17c-9e2a-4bd4-a039-6e51fde5f8fd" -> "3f7f30b1-4dbb-4459-9f25-358ad3c6d50b" [label="1"];
+    "2eb9860d-d241-45ca-85e6-cbd80fe2ebf7" -> "44d1f972-cd97-4636-b6e6-a389bf560656" [label="1"];
+    "18665160-b058-437f-9b2e-05df2eb55661" -> "7f3c8562-69b5-47a9-8ee4-898bd4b6b506" [label="1"];
+    "7f3c8562-69b5-47a9-8ee4-898bd4b6b506" -> "a6f22325-8841-4a81-bc04-4e7485117aa1" [label="0"];
+    "7f3c8562-69b5-47a9-8ee4-898bd4b6b506" -> "c181fe42-fd3c-48db-968a-502f8dd462a4" [label="1"];
+    "c181fe42-fd3c-48db-968a-502f8dd462a4" -> "51b9477a-0326-4774-8622-24d1d869a283" [label="0"];
+    "c181fe42-fd3c-48db-968a-502f8dd462a4" -> "16f6aecd-c675-4291-867c-6c64d27eb3fc" [label="1"];
+    "959b4c0c-1821-446d-94a1-c619c2decfcd" -> "adb05303-813a-4fe0-bf98-c319eb70be48" [label="1"];
+}
