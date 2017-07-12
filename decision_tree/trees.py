@@ -179,7 +179,7 @@ class DecisionTreeClassifier(object):
         value = data_vect[feat_names.index(feature)]
         sub_tree = tree[feature][value]
 
-        return self.classify(feat_names, data_vect, sub_tree)
+        return self.classify(data_vect, feat_names, sub_tree)
 
     def dump_tree(self, filename, tree=None):
         ''' 存储决策树
@@ -187,13 +187,13 @@ class DecisionTreeClassifier(object):
         if tree is None:
             tree = self.tree
 
-        with open(filename, 'w') as f:
+        with open(filename, 'wb') as f:
             pickle.dump(tree, f)
 
     def load_tree(self, filename):
         ''' 加载树结构
         '''
-        with open(filename, 'r') as f:
+        with open(filename, 'rb') as f:
             tree = pickle.load(f)
             self.tree = tree
         return tree
