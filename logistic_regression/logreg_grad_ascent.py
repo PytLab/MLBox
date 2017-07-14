@@ -18,7 +18,7 @@ class LogisticRegressionClassifier(object):
         return 1.0/(1 + np.exp(-x))
 
     def gradient_ascent(self, dataset, labels, max_iter=10000):
-        ''' 使用梯度提升优化Logistic回归模型参数
+        ''' 使用梯度上升优化Logistic回归模型参数
 
         :param dataset: 数据特征矩阵
         :type dataset: MxN numpy matrix
