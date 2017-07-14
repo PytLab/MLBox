@@ -16,7 +16,7 @@ class LogisticRegressionClassifier(BaseClassifer):
         '''
         dataset = np.matrix(dataset)
         m, n = dataset.shape
-        w = np.ones((n, 1))
+        w = np.matrix(np.ones((n, 1)))
         ws = []
 
         for i in range(max_iter):
@@ -24,17 +24,17 @@ class LogisticRegressionClassifier(BaseClassifer):
             random.shuffle(data_indices)
             for j, idx in enumerate(data_indices):
                 data, label = dataset[idx], labels[idx]
-                error = label - data*w
+                error = label - self.sigmoid((data*w).tolist()[0][0])
                 alpha = 4/(1 + j + i) + 0.01
                 w += alpha*data.T*error
-                ws.append(w)
+                ws.append(w.T.tolist()[0])
 
         return w, np.array(ws)
 
 if '__main__' == __name__:
     clf = LogisticRegressionClassifier()
     dataset, labels = load_data('testSet.txt')
-    w, ws = clf.gradient_ascent(dataset, labels, max_iter=200)
+    w, ws = clf.random_gradient_ascent(dataset, labels, max_iter=500)
     m, n = ws.shape
 
     # 绘制分割线
