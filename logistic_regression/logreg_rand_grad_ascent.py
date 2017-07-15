@@ -29,6 +29,8 @@ class LogisticRegressionClassifier(BaseClassifer):
                 w += alpha*data.T*error
                 ws.append(w.T.tolist()[0])
 
+        self.w = w
+
         return w, np.array(ws)
 
 if '__main__' == __name__:

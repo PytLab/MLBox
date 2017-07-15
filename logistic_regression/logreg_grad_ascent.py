@@ -37,7 +37,19 @@ class LogisticRegressionClassifier(object):
             w += alpha*dataset.T*error
             ws.append(w.reshape(1, -1).tolist()[0])
 
+        self.w = w
+
         return w, np.array(ws)
+
+    def classify(self, data, w=None):
+        ''' 对未知数据进行预测
+        '''
+        if w is None:
+            w = self.w
+
+        data = np.matrix(data)
+        prob = self.sigmoid((data*w).tolist()[0][0])
+        return round(prob)
 
 def load_data(filename):
     dataset, labels = [], []
