@@ -11,7 +11,7 @@ from logreg_grad_ascent import load_data, snapshot
 
 class LogisticRegressionClassifier(BaseClassifer):
 
-    def random_gradient_ascent(self, dataset, labels, max_iter=150):
+    def stoch_gradient_ascent(self, dataset, labels, max_iter=150):
         ''' 使用随机梯度上升算法优化Logistic回归模型参数
         '''
         dataset = np.matrix(dataset)
@@ -36,7 +36,7 @@ class LogisticRegressionClassifier(BaseClassifer):
 if '__main__' == __name__:
     clf = LogisticRegressionClassifier()
     dataset, labels = load_data('testSet.txt')
-    w, ws = clf.random_gradient_ascent(dataset, labels, max_iter=500)
+    w, ws = clf.stoch_gradient_ascent(dataset, labels, max_iter=500)
     m, n = ws.shape
 
     # 绘制分割线
@@ -52,4 +52,4 @@ if '__main__' == __name__:
         ax.plot(ws[:, i], label=label)
         ax.legend()
 
-    fig.savefig('rand_grad_ascent_params.png')
+    fig.savefig('stoch_grad_ascent_params.png')

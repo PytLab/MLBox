@@ -10,7 +10,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-from logreg_rand_grad_ascent import LogisticRegressionClassifier
+from logreg_stoch_grad_ascent import LogisticRegressionClassifier
 
 ENCODING = 'ISO-8859-1'
 TRAIN_PERCENTAGE = 0.9
@@ -84,7 +84,7 @@ if '__main__' == __name__:
     train_dataset = [get_doc_vector(words, vocabulary) for words in train_word_vects]
 
     # 训练LR模型
-    clf.random_gradient_ascent(train_dataset, train_classes)
+    clf.stoch_gradient_ascent(train_dataset, train_classes)
 
     # 测试模型
     error = 0
