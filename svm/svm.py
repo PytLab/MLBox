@@ -4,6 +4,7 @@
 import random
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def load_data(filename):
@@ -31,6 +32,15 @@ def select_j(i, m):
     l = list(range(m))
     seq = l[: i] + l[i+1:]
     return random.choice(seq)
+
+def get_w(alphas, dataset, labels):
+    ''' 通过已知数据点和拉格朗日乘子获得分割超平面参数w和b
+    '''
+    alphas, dataset, labels = np.array(alphas), np.array(dataset), np.array(labels)
+    yx = labels.reshape(1, -1).T*np.array([1, 1])*dataset
+    w = np.dot(yx.T, alphas)
+
+    return w.tolist()
 
 def simple_smo(dataset, labels, C, max_iter, tolerance):
     ''' 简化版SMO算法实现，未使用启发式方法对alpha对进行选择.
@@ -62,6 +72,8 @@ def simple_smo(dataset, labels, C, max_iter, tolerance):
         fx = wx + b
 
         return fx[0, 0]
+
+    all_alphas, all_bs = [], []
 
     while it < max_iter:
         pair_changed = 0
@@ -113,6 +125,9 @@ def simple_smo(dataset, labels, C, max_iter, tolerance):
             else:
                 b = (b_i + b_j)/2
 
+            all_alphas.append(alphas)
+            all_bs.append(b)
+
             pair_changed += 1
             print('INFO   iteration:{}  i:{}  pair_changed:{}'.format(it, i, pair_changed))
 
@@ -129,4 +144,30 @@ if '__main__' == __name__:
     dataset, labels = load_data('testSet.txt')
     # 使用简化版SMO算法优化SVM
     alphas, b = simple_smo(dataset, labels, 0.6, 40, 0.001)
+
+    # 分类数据点
+    classified_pts = {'+1': [], '-1': []}
+    for point, label in zip(dataset, labels):
+        if label == 1.0:
+            classified_pts['+1'].append(point)
+        else:
+            classified_pts['-1'].append(point)
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+
+    # 绘制数据点
+    for label, pts in classified_pts.items():
+        pts = np.array(pts)
+        ax.scatter(pts[:, 0], pts[:, 1], label=label)
+
+    # 绘制分割线
+    w = get_w(alphas, dataset, labels)
+    x1, _ = max(dataset, key=lambda x: x[0])
+    x2, _ = min(dataset, key=lambda x: x[0])
+    a1, a2 = w
+    y1, y2 = (-b - a1*x1)/a2, (-b - a1*x2)/a2
+    ax.plot([x1, x2], [y1, y2])
+
+    plt.show()
 
