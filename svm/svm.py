@@ -34,7 +34,7 @@ def select_j(i, m):
     return random.choice(seq)
 
 def get_w(alphas, dataset, labels):
-    ''' 通过已知数据点和拉格朗日乘子获得分割超平面参数w和b
+    ''' 通过已知数据点和拉格朗日乘子获得分割超平面参数w
     '''
     alphas, dataset, labels = np.array(alphas), np.array(dataset), np.array(labels)
     yx = labels.reshape(1, -1).T*np.array([1, 1])*dataset
@@ -42,13 +42,12 @@ def get_w(alphas, dataset, labels):
 
     return w.tolist()
 
-def simple_smo(dataset, labels, C, max_iter, tolerance):
+def simple_smo(dataset, labels, C, max_iter):
     ''' 简化版SMO算法实现，未使用启发式方法对alpha对进行选择.
 
     :param dataset: 所有特征数据向量
     :param labels: 所有的数据标签
     :param C: 软间隔常数, 0 <= alpha_i <= C
-    :param tolerance: 容错率
     :param max_iter: 外层循环最大迭代次数
     '''
     dataset = np.array(dataset)
@@ -143,7 +142,7 @@ if '__main__' == __name__:
     # 加载训练数据
     dataset, labels = load_data('testSet.txt')
     # 使用简化版SMO算法优化SVM
-    alphas, b = simple_smo(dataset, labels, 0.6, 40, 0.001)
+    alphas, b = simple_smo(dataset, labels, 0.6, 40)
 
     # 分类数据点
     classified_pts = {'+1': [], '-1': []}
