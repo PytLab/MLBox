@@ -169,5 +169,12 @@ if '__main__' == __name__:
     y1, y2 = (-b - a1*x1)/a2, (-b - a1*x2)/a2
     ax.plot([x1, x2], [y1, y2])
 
+    # 绘制支持向量
+    for i, alpha in enumerate(alphas):
+        if abs(alpha) > 1e-3:
+            x, y = dataset[i]
+            ax.scatter([x], [y], s=150, c='none', alpha=0.7,
+                       linewidth=1.5, edgecolor='#AB3319')
+
     plt.show()
 
