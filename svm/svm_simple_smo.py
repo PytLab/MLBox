@@ -126,15 +126,16 @@ def simple_smo(dataset, labels, C, max_iter):
 
             all_alphas.append(alphas)
             all_bs.append(b)
+            print(b)
 
             pair_changed += 1
-            print('INFO   iteration:{}  i:{}  pair_changed:{}'.format(it, i, pair_changed))
+            #print('INFO   iteration:{}  i:{}  pair_changed:{}'.format(it, i, pair_changed))
 
         if pair_changed == 0:
             it += 1
         else:
             it = 0
-        print('iteration number: {}'.format(it))
+        #print('iteration number: {}'.format(it))
 
     return alphas, b
 
