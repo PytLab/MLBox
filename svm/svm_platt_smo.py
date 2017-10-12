@@ -76,13 +76,14 @@ def select_j_rand(i, m):
 def select_j(i, svm_util):
     ''' 通过最大化步长的方式来获取第二个alpha值的索引.
     '''
-    E_i = svm_util.errors[i]
+    E_i = svm_util.get_error(i)
 
     max_delta = 0
     j = -1
-    for k, E_j in enumerate(svm_util.errors):
+    for k in range(svm_util.m):
         if k == i:
             continue
+        E_j = svm_util.get_error(k)
         delta = abs(E_i - E_j)
         if delta > max_delta:
             j = k
@@ -105,10 +106,12 @@ def inner_loop(i, svm_util):
     errors, C, b = svm_util.errors, svm_util.C, svm_util.b
 
     a_i, x_i, y_i, E_i = alphas[i], dataset[i], labels[i], errors[i]
+    E_i = svm_util.get_error(i)
 
     #j = select_j(i, svm_util)
     j = select_j_rand(i, svm_util.m)
     a_j, x_j, y_j, E_j = alphas[j], dataset[j], labels[j], errors[j]
+    E_j = svm_util.get_error(j)
 
     K_ii, K_jj, K_ij = np.dot(x_i, x_i), np.dot(x_j, x_j), np.dot(x_i, x_j)
     eta = K_ii + K_jj - 2*K_ij
@@ -131,14 +134,15 @@ def inner_loop(i, svm_util):
     a_i_new = a_i_old + y_i*y_j*(a_j_old - a_j_new)
 
     if abs(a_j_new - a_j_old) < 0.00001:
-        #print('WARNING   alpha_j not moving enough')
+        print('WARNING   alpha_j not moving enough')
         return 0
 
     alphas[i], alphas[j] = a_i_new, a_j_new
 
     # 更新阈值b
-    b_i = -E_i - y_i*K_ii*(a_i_new - a_i_old) - y_j*K_ij*(a_j_new - a_j_old) + svm_util.b
-    b_j = -E_j - y_i*K_ij*(a_i_new - a_i_old) - y_j*K_jj*(a_j_new - a_j_old) + svm_util.b
+    #import ipdb; ipdb.set_trace()
+    b_i = -E_i - y_i*K_ii*(a_i_new - a_i_old) - y_j*K_ij*(a_j_new - a_j_old) + b
+    b_j = -E_j - y_i*K_ij*(a_i_new - a_i_old) - y_j*K_jj*(a_j_new - a_j_old) + b
 
     if 0 < a_i_new < C:
         b = b_i
@@ -147,8 +151,6 @@ def inner_loop(i, svm_util):
     else:
         b = (b_i + b_j)/2
 
-    # Update errors.
-    svm_util.update_errors()
     svm_util.b = b
     print(svm_util.b)
 
@@ -174,25 +176,22 @@ def platt_smo(dataset, labels, C, max_iter):
         if entire:
             for i in range(svm_util.m):
                 pair_changed += inner_loop(i, svm_util)
-                #print('Full set - iter: {}, pair changed: {}'.format(i, pair_changed))
+                print('Full set - iter: {}, pair changed: {}'.format(i, pair_changed))
         else:
             alphas = svm_util.alphas
             non_bound_indices = [i for i in range(svm_util.m)
                                  if alphas[i] > 0 and alphas[i] < C]
             for i in non_bound_indices:
                 pair_changed += inner_loop(i, svm_util)
-                #print('Non-bound - iter:{}, pair changed: {}'.format(i, pair_changed))
-        if pair_changed == 0:
-            it += 1
-        else:
-            it = 0
+                print('Non-bound - iter:{}, pair changed: {}'.format(i, pair_changed))
+        it += 1
 
-#        if entire:
-#            entire = False
-#        elif pair_changed == 0:
-#            entire = True
+        if entire:
+            entire = False
+        elif pair_changed == 0:
+            entire = True
 
-        #print('iteration number: {}'.format(it))
+        print('iteration number: {}'.format(it))
 
     return svm_util.alphas, svm_util.b
 

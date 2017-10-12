@@ -108,12 +108,13 @@ def simple_smo(dataset, labels, C, max_iter):
             a_i_new = a_i_old + y_i*y_j*(a_j_old - a_j_new)
 
             if abs(a_j_new - a_j_old) < 0.00001:
-                #print('WARNING   alpha_j not moving enough')
+                print('WARNING   alpha_j not moving enough')
                 continue
 
             alphas[i], alphas[j] = a_i_new, a_j_new
 
             # 更新阈值b
+            #import ipdb; ipdb.set_trace()
             b_i = -E_i - y_i*K_ii*(a_i_new - a_i_old) - y_j*K_ij*(a_j_new - a_j_old) + b
             b_j = -E_j - y_i*K_ij*(a_i_new - a_i_old) - y_j*K_jj*(a_j_new - a_j_old) + b
 
@@ -126,16 +127,15 @@ def simple_smo(dataset, labels, C, max_iter):
 
             all_alphas.append(alphas)
             all_bs.append(b)
-            print(b)
 
             pair_changed += 1
-            #print('INFO   iteration:{}  i:{}  pair_changed:{}'.format(it, i, pair_changed))
+            print('INFO   iteration:{}  i:{}  pair_changed:{}'.format(it, i, pair_changed))
 
         if pair_changed == 0:
             it += 1
         else:
             it = 0
-        #print('iteration number: {}'.format(it))
+        print('iteration number: {}'.format(it))
 
     return alphas, b
 
