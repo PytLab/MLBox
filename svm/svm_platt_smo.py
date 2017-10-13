@@ -76,18 +76,21 @@ def select_j_rand(i, m):
 def select_j(i, svm_util):
     ''' 通过最大化步长的方式来获取第二个alpha值的索引.
     '''
-    E_i = svm_util.get_error(i)
+    errors = svm_util.errors
+    valid_indices = [i for i in range(svm_util.m) if abs(errors[i]) > 0]
 
-    max_delta = 0
-    j = -1
-    for k in range(svm_util.m):
-        if k == i:
-            continue
-        E_j = svm_util.get_error(k)
-        delta = abs(E_i - E_j)
-        if delta > max_delta:
-            j = k
-            max_delta = delta
+    if len(valid_indices) > 1:
+        j = -1
+        max_delta = 0
+        for k in valid_indices:
+            if k == i:
+                continue
+            delta = abs(errors[i] - errors[j])
+            if delta > max_delta:
+                j = k
+                max_delta = delta
+    else:
+        j = select_j_rand(i, svm_util.m)
     return j
 
 def get_w(alphas, dataset, labels):
@@ -102,14 +105,16 @@ def get_w(alphas, dataset, labels):
 def inner_loop(i, svm_util):
     ''' 根据选定的第一个alpha，确定第二个alpha，并对alpha对进行优化.
     '''
+    svm_util.update_errors()
+
     alphas, dataset, labels = svm_util.alphas, svm_util.dataset, svm_util.labels
     errors, C, b = svm_util.errors, svm_util.C, svm_util.b
 
     a_i, x_i, y_i, E_i = alphas[i], dataset[i], labels[i], errors[i]
     E_i = svm_util.get_error(i)
 
-    #j = select_j(i, svm_util)
-    j = select_j_rand(i, svm_util.m)
+    j = select_j(i, svm_util)
+    #j = select_j_rand(i, svm_util.m)
     a_j, x_j, y_j, E_j = alphas[j], dataset[j], labels[j], errors[j]
     E_j = svm_util.get_error(j)
 
@@ -134,7 +139,7 @@ def inner_loop(i, svm_util):
     a_i_new = a_i_old + y_i*y_j*(a_j_old - a_j_new)
 
     if abs(a_j_new - a_j_old) < 0.00001:
-        print('WARNING   alpha_j not moving enough')
+        #print('WARNING   alpha_j not moving enough')
         return 0
 
     alphas[i], alphas[j] = a_i_new, a_j_new
@@ -199,7 +204,7 @@ if '__main__' == __name__:
     # 加载训练数据
     dataset, labels = load_data('testSet.txt')
     # 使用简化版SMO算法优化SVM
-    alphas, b = platt_smo(dataset, labels, 0.6, 40)
+    alphas, b = platt_smo(dataset, labels, 0.8, 20)
 
     # 分类数据点
     classified_pts = {'+1': [], '-1': []}
