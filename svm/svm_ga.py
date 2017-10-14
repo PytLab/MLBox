@@ -36,7 +36,7 @@ def get_w(alphas, dataset, labels):
 indv_template = GAIndividual(ranges=[(-2, 2), (-2, 2), (-5, 5)],
                              encoding='binary',
                              eps=[0.001, 0.001, 0.005])
-population = GAPopulation(indv_template=indv_template, size=200).init()
+population = GAPopulation(indv_template=indv_template, size=600).init()
 
 # Genetic operators.
 selection = RouletteWheelSelection()
@@ -61,7 +61,7 @@ def fitness(indv):
     return float(min_dis)
 
 if '__main__' == __name__:
-    engine.run(500)
+    engine.run(300)
 
     variants = engine.population.best_indv(engine.fitness).variants
     w = variants[: -1]
