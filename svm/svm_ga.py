@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+''' 使用遗传算法框架GAFT优化SVM.
+
+GAFT项目地址: https://github.com/PytLab/gaft
+'''
+
 import random
 
 import numpy as np
