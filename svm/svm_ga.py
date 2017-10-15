@@ -58,11 +58,7 @@ dataset, labels = load_data('testSet.txt')
 @engine.fitness_register
 def fitness(indv):
     w, b = indv.variants[: -1], indv.variants[-1]
-    min_dis = float('inf')
-    for x, y in zip(dataset, labels):
-        dis = y*(np.dot(w, x) + b)
-        if dis < min_dis:
-            min_dis = dis
+    min_dis = min([y*(np.dot(w, x) + b) for x, y in zip(dataset, labels)])
     return float(min_dis)
 
 if '__main__' == __name__:
