@@ -11,12 +11,13 @@ class SVMUtil(object):
     '''
     Struct to save all important values in SVM.
     '''
-    def __init__(self, dataset, labels, C):
+    def __init__(self, dataset, labels, C, tolerance=0.001):
         self.dataset, self.labels, self.C = dataset, labels, C
 
         self.m, self.n = np.array(dataset).shape
         self.alphas = np.zeros(self.m)
         self.b = 0
+        self.tolerance = tolerance
         # Cached errors ,f(x_i) - y_i
         self.errors = [self.get_error(i) for i in range(self.m)]
 
@@ -46,6 +47,16 @@ class SVMUtil(object):
         '''
         self.errors = [self.get_error(i) for i in range(self.m)]
 
+    def meet_kkt(self, i):
+        alpha = self.alphas[i]
+        x = self.dataset[i]
+
+        if alpha == 0:
+            return self.f(x) >= 1
+        elif alpha == self.C:
+            return self.f(x) <= 1
+        else:
+            return self.f(x) == 1
 
 def load_data(filename):
     dataset, labels = [], []
@@ -77,7 +88,7 @@ def select_j(i, svm_util):
     ''' 通过最大化步长的方式来获取第二个alpha值的索引.
     '''
     errors = svm_util.errors
-    valid_indices = [i for i in range(svm_util.m) if abs(errors[i]) > 0]
+    valid_indices = [i for i, a in enumerate(svm_util.alphas) if 0 < a < svm_util.C]
 
     if len(valid_indices) > 1:
         j = -1
@@ -102,21 +113,15 @@ def get_w(alphas, dataset, labels):
 
     return w.tolist()
 
-def inner_loop(i, svm_util):
-    ''' 根据选定的第一个alpha，确定第二个alpha，并对alpha对进行优化.
+def take_step(i, j, svm_util):
+    ''' 对选定的一对alpha对进行优化.
     '''
     svm_util.update_errors()
-
     alphas, dataset, labels = svm_util.alphas, svm_util.dataset, svm_util.labels
-    errors, C, b = svm_util.errors, svm_util.C, svm_util.b
+    C, b = svm_util.C, svm_util.b
 
-    a_i, x_i, y_i, E_i = alphas[i], dataset[i], labels[i], errors[i]
-    E_i = svm_util.get_error(i)
-
-    j = select_j(i, svm_util)
-    #j = select_j_rand(i, svm_util.m)
-    a_j, x_j, y_j, E_j = alphas[j], dataset[j], labels[j], errors[j]
-    E_j = svm_util.get_error(j)
+    a_i, x_i, y_i, E_i = alphas[i], dataset[i], labels[i], svm_util.errors[i]
+    a_j, x_j, y_j, E_j = alphas[j], dataset[j], labels[j], svm_util.errors[j]
 
     K_ii, K_jj, K_ij = np.dot(x_i, x_i), np.dot(x_j, x_j), np.dot(x_i, x_j)
     eta = K_ii + K_jj - 2*K_ij
@@ -143,9 +148,9 @@ def inner_loop(i, svm_util):
         return 0
 
     alphas[i], alphas[j] = a_i_new, a_j_new
+    svm_util.update_errors()
 
     # 更新阈值b
-    #import ipdb; ipdb.set_trace()
     b_i = -E_i - y_i*K_ii*(a_i_new - a_i_old) - y_j*K_ij*(a_j_new - a_j_old) + b
     b_j = -E_j - y_i*K_ij*(a_i_new - a_i_old) - y_j*K_jj*(a_j_new - a_j_old) + b
 
@@ -157,9 +162,24 @@ def inner_loop(i, svm_util):
         b = (b_i + b_j)/2
 
     svm_util.b = b
-    print(svm_util.b)
+    print(b)
 
     return 1
+
+def examine_example(i, svm_util):
+    ''' 给定第一个alpha， 检测对应alpha是否符合KKT条件并选取第二个alpha进行迭代.
+    '''
+    E_i, y_i, alpha = svm_util.errors[i], svm_util.labels[i], svm_util.alphas[i]
+    r = E_i*y_i
+    C, tolerance = svm_util.C, svm_util.tolerance
+
+    # 是否违反KKT条件
+    if (r < -tolerance and alpha < C) or (r > tolerance and alpha > 0):
+        j = select_j(i, svm_util)
+        #j = select_j_rand(i, svm_util.m)
+        return take_step(i, j, svm_util)
+    else:
+        return 0
 
 def platt_smo(dataset, labels, C, max_iter):
     ''' Platt SMO算法实现，使用启发式方法对alpha对进行选择.
@@ -176,18 +196,19 @@ def platt_smo(dataset, labels, C, max_iter):
     # 遍历所有alpha的标记
     entire = True
 
-    while it < max_iter:
+    pair_changed = 0
+    while (it < max_iter): #and (pair_changed > 0 or entire):
         pair_changed = 0
         if entire:
             for i in range(svm_util.m):
-                pair_changed += inner_loop(i, svm_util)
+                pair_changed += examine_example(i, svm_util)
                 print('Full set - iter: {}, pair changed: {}'.format(i, pair_changed))
         else:
             alphas = svm_util.alphas
             non_bound_indices = [i for i in range(svm_util.m)
                                  if alphas[i] > 0 and alphas[i] < C]
             for i in non_bound_indices:
-                pair_changed += inner_loop(i, svm_util)
+                pair_changed += examine_example(i, svm_util)
                 print('Non-bound - iter:{}, pair changed: {}'.format(i, pair_changed))
         it += 1
 
@@ -204,7 +225,7 @@ if '__main__' == __name__:
     # 加载训练数据
     dataset, labels = load_data('testSet.txt')
     # 使用简化版SMO算法优化SVM
-    alphas, b = platt_smo(dataset, labels, 0.8, 20)
+    alphas, b = platt_smo(dataset, labels, 0.8, 40)
 
     # 分类数据点
     classified_pts = {'+1': [], '-1': []}
