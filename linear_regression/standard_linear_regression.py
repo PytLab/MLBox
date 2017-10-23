@@ -24,10 +24,21 @@ def std_linreg(X, Y):
         return
     return xTx.I*X.T*Y
 
+def get_corrcoef(X, Y):
+    # X Y 的协方差
+    cov = np.mean(X*Y) - np.mean(X)*np.mean(Y)
+    return cov/(np.var(X)*np.var(Y))**0.5
+
 if '__main__' == __name__:
     # 加载数据
     X, Y = load_data('ex0.txt')
     w = std_linreg(X, Y)
+    Y_prime = X*w
+
+    # 计算相关系数
+    corrcoef = get_corrcoef(np.array(Y.reshape(1, -1)),
+                            np.array(Y_prime.reshape(1, -1)))
+    print('Correlation coeffient: {}'.format(corrcoef))
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -43,5 +54,5 @@ if '__main__' == __name__:
     y2 = (np.matrix([1, x2])*w).tolist()[0][0]
     ax.plot([x1, x2], [y1, y2], c='r')
 
-    plt.show()
+    #plt.show()
 
