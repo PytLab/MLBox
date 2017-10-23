@@ -26,7 +26,7 @@ def std_linreg(X, Y):
 
 if '__main__' == __name__:
     # 加载数据
-    X, Y = load_data('ex1.txt')
+    X, Y = load_data('ex0.txt')
     w = std_linreg(X, Y)
 
     fig = plt.figure()
