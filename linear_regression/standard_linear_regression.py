@@ -35,6 +35,8 @@ if '__main__' == __name__:
     w = std_linreg(X, Y)
     Y_prime = X*w
 
+    print('w: {}'.format(w))
+
     # 计算相关系数
     corrcoef = get_corrcoef(np.array(Y.reshape(1, -1)),
                             np.array(Y_prime.reshape(1, -1)))

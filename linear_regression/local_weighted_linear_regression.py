@@ -40,6 +40,9 @@ if '__main__' == __name__:
         w = lwlr(x, X, Y, k).reshape(1, -1).tolist()[0]
         y_prime.append(np.dot(x, w))
 
+    corrcoef = get_corrcoef(np.array(Y.reshape(1, -1)), np.array(y_prime))
+    print('Correlation coefficient: {}'.format(corrcoef))
+
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
