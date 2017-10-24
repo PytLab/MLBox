@@ -54,5 +54,5 @@ if '__main__' == __name__:
     y2 = (np.matrix([1, x2])*w).tolist()[0][0]
     ax.plot([x1, x2], [y1, y2], c='r')
 
-    #plt.show()
+    plt.show()
 
