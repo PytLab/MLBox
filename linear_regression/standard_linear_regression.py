@@ -11,8 +11,9 @@ def load_data(filename):
     X, Y = [], []
     with open(filename, 'r') as f:
         for line in f:
-            c, x, y = [float(i) for i in line.split()]
-            X.append([c, x])
+            splited_line = [float(i) for i in line.split()]
+            x, y = splited_line[: -1], splited_line[-1]
+            X.append(x)
             Y.append(y)
     X, Y = np.matrix(X), np.matrix(Y).T
     return X, Y
