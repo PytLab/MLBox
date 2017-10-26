@@ -37,10 +37,30 @@ def ridge_traj(X, y, ntest=30):
 if '__main__' == __name__:
     ntest = 30
     # 加载数据
-    X, y = load_data('ex0.txt')
-    ws = ridge_traj(X, y, ntest)
+    X, y = load_data('abalone.txt')
+
+    # 测试数据和训练数据
+    w_test, errors = [], []
+    for i in range(ntest):
+        lambd = exp(i - 10)
+        # 训练数据
+        X_train, y_train = X[: 180, :], y[: 180, :]
+        # 测试数据
+        X_test, y_test = X[180: -1, :], y[180: -1, :]
+
+        # 岭回归系数
+        w = ridge_regression(X_train, y_train, lambd)
+        error = np.std(X_test*w - y_test)
+        w_test.append(w)
+        errors.append(error)
+
+    # 选择误差最小的回归系数
+    w_best, e_best = min(zip(w_test, errors), key=lambda x: x[1])
+
+    print('Best w: {}, best error: {}'.format(w_best, e_best))
 
     # 绘制岭轨迹
+    ws = ridge_traj(X, y, ntest)
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
