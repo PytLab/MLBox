@@ -39,6 +39,9 @@ if '__main__' == __name__:
     # 加载数据
     X, y = load_data('abalone.txt')
 
+    # 中心化 & 标准化
+    X, y = standarize(X), standarize(y)
+
     # 测试数据和训练数据
     w_test, errors = [], []
     for i in range(ntest):
