@@ -18,6 +18,13 @@ def load_data(filename):
     X, Y = np.matrix(X), np.matrix(Y).T
     return X, Y
 
+def standarize(X):
+    ''' 中心化 & 标准化数据 (零均值, 单位标准差)
+    '''
+    std_deviation = np.std(X, 0)
+    mean = np.mean(X, 0)
+    return (X - mean)/std_deviation
+
 def std_linreg(X, Y):
     xTx = X.T*X
     if np.linalg.det(xTx) == 0:
@@ -32,7 +39,8 @@ def get_corrcoef(X, Y):
 
 if '__main__' == __name__:
     # 加载数据
-    X, Y = load_data('ex0.txt')
+    X, Y = load_data('abalone.txt')
+    X, Y = standarize(X), standarize(Y)
     w = std_linreg(X, Y)
     Y_prime = X*w
 
@@ -43,19 +51,19 @@ if '__main__' == __name__:
                             np.array(Y_prime.reshape(1, -1)))
     print('Correlation coeffient: {}'.format(corrcoef))
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
+    #fig = plt.figure()
+    #ax = fig.add_subplot(111)
 
-    # 绘制数据点
-    x = X[:, 1].reshape(1, -1).tolist()[0]
-    y = Y.reshape(1, -1).tolist()[0]
-    ax.scatter(x, y)
+    ## 绘制数据点
+    #x = X[:, 1].reshape(1, -1).tolist()[0]
+    #y = Y.reshape(1, -1).tolist()[0]
+    #ax.scatter(x, y)
 
-    # 绘制拟合直线
-    x1, x2 = min(x), max(x)
-    y1 = (np.matrix([1, x1])*w).tolist()[0][0]
-    y2 = (np.matrix([1, x2])*w).tolist()[0][0]
-    ax.plot([x1, x2], [y1, y2], c='r')
+    ## 绘制拟合直线
+    #x1, x2 = min(x), max(x)
+    #y1 = (np.matrix([1, x1])*w).tolist()[0][0]
+    #y2 = (np.matrix([1, x2])*w).tolist()[0][0]
+    #ax.plot([x1, x2], [y1, y2], c='r')
 
-    plt.show()
+    #plt.show()
 

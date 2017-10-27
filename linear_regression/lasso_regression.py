@@ -7,8 +7,7 @@ from math import exp
 import numpy as np
 import matplotlib.pyplot as plt
 
-from standard_linear_regression import load_data, get_corrcoef
-from ridge_regression import standarize
+from standard_linear_regression import load_data, standarize
 
 
 def lasso_regression(X, y, lambd=0.2, threshold=0.1):

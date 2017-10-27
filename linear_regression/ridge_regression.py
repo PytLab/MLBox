@@ -17,13 +17,6 @@ def ridge_regression(X, y, lambd=0.2):
     w = (XTX + lambd*I).I*X.T*y
     return w
 
-def standarize(X):
-    ''' 中心化 & 标准化数据 (零均值, 单位标准差)
-    '''
-    std_deviation = np.std(X, 0)
-    mean = np.mean(X, 0)
-    return (X - mean)/std_deviation
-
 def ridge_traj(X, y, ntest=30):
     ''' 获取岭轨迹矩阵
     '''
