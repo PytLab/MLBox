@@ -7,7 +7,7 @@ from math import exp
 import numpy as np
 import matplotlib.pyplot as plt
 
-from standard_linear_regression import load_data, standarize
+from standard_linear_regression import load_data, standarize, get_corrcoef    
 
 
 def lasso_regression(X, y, lambd=0.2, threshold=0.1):
@@ -64,17 +64,24 @@ def lasso_traj(X, y, ntest=30):
 if '__main__' == __name__:
     X, y = load_data('abalone.txt')
     X, y = standarize(X), standarize(y)
-    #w = lasso_regression(X, y, lambd=10)
+    w = lasso_regression(X, y, lambd=10)
 
-    ntest = 30
+    y_prime = X*w
+    # 计算相关系数
+    corrcoef = get_corrcoef(np.array(y.reshape(1, -1)),
+                            np.array(y_prime.reshape(1, -1)))
+    print('Correlation coefficient: {}'.format(corrcoef))
 
-    # 绘制轨迹
-    ws = lasso_traj(X, y, ntest)
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
 
-    lambdas = [i-10 for i in range(ntest)]
-    ax.plot(lambdas, ws)
-
-    plt.show()
+#    ntest = 30
+#
+#    # 绘制轨迹
+#    ws = lasso_traj(X, y, ntest)
+#    fig = plt.figure()
+#    ax = fig.add_subplot(111)
+#
+#    lambdas = [i-10 for i in range(ntest)]
+#    ax.plot(lambdas, ws)
+#
+#    plt.show()
 

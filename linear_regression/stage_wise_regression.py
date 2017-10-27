@@ -4,8 +4,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from standard_linear_regression import load_data
-from ridge_regression import standarize
+from standard_linear_regression import load_data, get_corrcoef
+from standard_linear_regression import standarize
 
 def stagewise_regression(X, y, eps=0.01, niter=100):
     ''' 通过向前逐步回归获取回归系数
@@ -39,6 +39,14 @@ if '__main__' == __name__:
     epsilon = 0.005
     niter = 1000
     all_ws = stagewise_regression(X, y, eps=epsilon, niter=niter)
+
+    w = all_ws[-1, :]
+    y_prime = X*w.T
+
+    # 计算相关系数
+    corrcoef = get_corrcoef(np.array(y.reshape(1, -1)),
+                            np.array(y_prime.reshape(1, -1)))
+    print('Correlation coefficient: {}'.format(corrcoef))
 
     # 绘制逐步线性回归回归系数变化轨迹
 

@@ -6,7 +6,7 @@ from math import exp
 import numpy as np
 import matplotlib.pyplot as plt
 
-from standard_linear_regression import load_data, get_corrcoef
+from standard_linear_regression import load_data, get_corrcoef, standarize
 
 def ridge_regression(X, y, lambd=0.2):
     ''' 获取岭回归系数
@@ -52,8 +52,13 @@ if '__main__' == __name__:
 
     # 选择误差最小的回归系数
     w_best, e_best = min(zip(w_test, errors), key=lambda x: x[1])
-
     print('Best w: {}, best error: {}'.format(w_best, e_best))
+
+    y_prime = X*w_best
+    # 计算相关系数
+    corrcoef = get_corrcoef(np.array(y.reshape(1, -1)),
+                            np.array(y_prime.reshape(1, -1)))
+    print('Correlation coefficient: {}'.format(corrcoef))
 
     # 绘制岭轨迹
     ws = ridge_traj(X, y, ntest)
