@@ -65,17 +65,17 @@ def lasso_traj(X, y, ntest=30):
 if '__main__' == __name__:
     X, y = load_data('abalone.txt')
     X, y = standarize(X), standarize(y)
-    w = lasso_regression(X, y, lambd=10)
+    #w = lasso_regression(X, y, lambd=10)
 
-#    ntest = 30
-#
-#    # 绘制岭轨迹
-#    ws = lasso_traj(X, y, ntest)
-#    fig = plt.figure()
-#    ax = fig.add_subplot(111)
-#
-#    lambdas = [i-10 for i in range(ntest)]
-#    ax.plot(lambdas, ws)
-#
-#    plt.show()
+    ntest = 30
+
+    # 绘制轨迹
+    ws = lasso_traj(X, y, ntest)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+
+    lambdas = [i-10 for i in range(ntest)]
+    ax.plot(lambdas, ws)
+
+    plt.show()
 
