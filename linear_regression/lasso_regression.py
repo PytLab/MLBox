@@ -44,7 +44,7 @@ def lasso_regression(X, y, lambd=0.2, threshold=0.1):
         r_prime = rss(X, y, w)
         delta = abs(r_prime - r)[0, 0]
         r = r_prime
-        print('Iteration: {}, delta = {}'.format(it, delta))
+        #print('Iteration: {}, delta = {}'.format(it, delta))
 
         if delta < threshold:
             break
@@ -59,29 +59,30 @@ def lasso_traj(X, y, ntest=30):
     for i in range(ntest):
         w = lasso_regression(X, y, lambd=exp(i-10))
         ws[i, :] = w.T
+        print('lambda = e^({}), w = {}'.format(i-10, w.T[0, :]))
     return ws
 
 if '__main__' == __name__:
     X, y = load_data('abalone.txt')
     X, y = standarize(X), standarize(y)
-    w = lasso_regression(X, y, lambd=10)
-
-    y_prime = X*w
-    # 计算相关系数
-    corrcoef = get_corrcoef(np.array(y.reshape(1, -1)),
-                            np.array(y_prime.reshape(1, -1)))
-    print('Correlation coefficient: {}'.format(corrcoef))
-
-
-#    ntest = 30
+#    w = lasso_regression(X, y, lambd=10)
 #
-#    # 绘制轨迹
-#    ws = lasso_traj(X, y, ntest)
-#    fig = plt.figure()
-#    ax = fig.add_subplot(111)
-#
-#    lambdas = [i-10 for i in range(ntest)]
-#    ax.plot(lambdas, ws)
-#
-#    plt.show()
+#    y_prime = X*w
+#    # 计算相关系数
+#    corrcoef = get_corrcoef(np.array(y.reshape(1, -1)),
+#                            np.array(y_prime.reshape(1, -1)))
+#    print('Correlation coefficient: {}'.format(corrcoef))
+
+
+    ntest = 30
+
+    # 绘制轨迹
+    ws = lasso_traj(X, y, ntest)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+
+    lambdas = [i-10 for i in range(ntest)]
+    ax.plot(lambdas, ws)
+
+    plt.show()
 
