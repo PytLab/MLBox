@@ -5,6 +5,8 @@
 '''
 
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 def load_data(filename):
     ''' 加载文本文件中的数据.
@@ -117,4 +119,12 @@ def choose_best_feature(dataset, fleaf, ferr, opt):
         return None, fleaf(dataset)
 
     return best_feat_idx, best_feat_val
+
+if '__main__' == __name__:
+    dataset = load_data('ex0.txt')
+    tree = create_tree(dataset, fleaf, ferr)
+
+    dataset = np.array(dataset)
+    plt.scatter(dataset[:, 0], dataset[:, 1])
+    plt.show()
 
