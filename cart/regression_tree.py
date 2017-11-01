@@ -4,6 +4,9 @@
 ''' 回归树实现
 '''
 
+import uuid
+from functools import namedtuple
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -120,9 +123,65 @@ def choose_best_feature(dataset, fleaf, ferr, opt):
 
     return best_feat_idx, best_feat_val
 
+def get_nodes_edges(tree, root_node=None):
+    ''' 返回树中所有节点和边
+    '''
+    Node = namedtuple('Node', ['id', 'label'])
+    Edge = namedtuple('Edge', ['start', 'end'])
+
+    nodes, edges = [], []
+
+    if type(tree) is not dict:
+        return nodes, edges
+
+    if root_node is None:
+        label = '{}: {}'.format(tree['feat_idx'], tree['feat_val'])
+        root_node = Node._make([uuid.uuid4(), label])
+        nodes.append(root_node)
+
+    for sub_tree in (tree['left'], tree['right']):
+        if type(sub_tree) is dict:
+            node_label = '{}: {}'.format(sub_tree['feat_idx'], sub_tree['feat_val'])
+        else:
+            node_label = '{:.2f}'.format(sub_tree)
+        sub_node = Node._make([uuid.uuid4(), node_label])
+        nodes.append(sub_node)
+
+        edge = Edge._make([root_node, sub_node])
+        edges.append(edge)
+
+        sub_nodes, sub_edges = get_nodes_edges(sub_tree, root_node=sub_node)
+        nodes.extend(sub_nodes)
+        edges.extend(sub_edges)
+
+    return nodes, edges
+
+def dotify(tree):
+    ''' 获取树的Graphviz Dot文件的内容
+    '''
+    content = 'digraph decision_tree {\n'
+    nodes, edges = get_nodes_edges(tree)
+
+    for node in nodes:
+        content += '    "{}" [label="{}"];\n'.format(node.id, node.label)
+
+    for edge in edges:
+        start, end = edge.start, edge.end
+        content += '    "{}" -> "{}";\n'.format(start.id, end.id)
+    content += '}'
+
+    return content
+
 if '__main__' == __name__:
-    dataset = load_data('ex0.txt')
-    tree = create_tree(dataset, fleaf, ferr)
+    datafile = 'ex0.txt'
+    dataset = load_data(datafile)
+    tree = create_tree(dataset, fleaf, ferr, opt={'n_tolerance': 4,
+                                                  'err_tolerance': 1})
+
+    dotfile = '{}.dot'.format(datafile.split('.')[0])
+    with open(dotfile, 'w') as f:
+        content = dotify(tree)
+        f.write(content)
 
     dataset = np.array(dataset)
     plt.scatter(dataset[:, 0], dataset[:, 1])
