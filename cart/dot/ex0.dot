@@ -1,0 +1,19 @@
+digraph decision_tree {
+    "5db27cbb-29af-4987-9cd2-9217c781000d" [label="0: 0.400158"];
+    "a81daf61-ab07-4e65-8b8a-55ee0bd0b40c" [label="0: 0.208197"];
+    "1f1412f1-659b-4347-8013-f6e57e634c2b" [label="-0.02"];
+    "32292eec-1e38-4eff-9700-cba03d93d7d8" [label="1.03"];
+    "7cee5c66-0140-4be7-ab6e-01245b3c8199" [label="0: 0.609483"];
+    "3308a031-f17e-494c-b015-9b5f3d904dba" [label="1.98"];
+    "d53cb038-a0fa-4635-9a07-36d40c33d6b9" [label="0: 0.816742"];
+    "adeac9bb-ef8a-4a91-a821-bade5e047d0d" [label="2.98"];
+    "208da594-0e82-4b01-af38-b60bac08624d" [label="3.99"];
+    "5db27cbb-29af-4987-9cd2-9217c781000d" -> "a81daf61-ab07-4e65-8b8a-55ee0bd0b40c";
+    "a81daf61-ab07-4e65-8b8a-55ee0bd0b40c" -> "1f1412f1-659b-4347-8013-f6e57e634c2b";
+    "a81daf61-ab07-4e65-8b8a-55ee0bd0b40c" -> "32292eec-1e38-4eff-9700-cba03d93d7d8";
+    "5db27cbb-29af-4987-9cd2-9217c781000d" -> "7cee5c66-0140-4be7-ab6e-01245b3c8199";
+    "7cee5c66-0140-4be7-ab6e-01245b3c8199" -> "3308a031-f17e-494c-b015-9b5f3d904dba";
+    "7cee5c66-0140-4be7-ab6e-01245b3c8199" -> "d53cb038-a0fa-4635-9a07-36d40c33d6b9";
+    "d53cb038-a0fa-4635-9a07-36d40c33d6b9" -> "adeac9bb-ef8a-4a91-a821-bade5e047d0d";
+    "d53cb038-a0fa-4635-9a07-36d40c33d6b9" -> "208da594-0e82-4b01-af38-b60bac08624d";
+}
