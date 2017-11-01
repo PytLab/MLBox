@@ -172,6 +172,20 @@ def dotify(tree):
 
     return content
 
+def tree_predict(data, tree):
+    ''' 根据给定的回归树预测数据值
+    '''
+    if type(tree) is not dict:
+        return tree
+
+    feat_idx, feat_val = tree['feat_idx'], tree['feat_val']
+    if data[feat_idx] < feat_val:
+        sub_tree = tree['left']
+    else:
+        sub_tree = tree['right']
+
+    return tree_predict(data, sub_tree)
+
 if '__main__' == __name__:
     datafile = 'ex0.txt'
     dataset = load_data(datafile)
@@ -184,6 +198,11 @@ if '__main__' == __name__:
         f.write(content)
 
     dataset = np.array(dataset)
+    # 绘制散点
     plt.scatter(dataset[:, 0], dataset[:, 1])
+    # 绘制回归曲线
+    x = np.linspace(0, 1, 50)
+    y = [tree_predict([i], tree) for i in x]
+    plt.plot(x, y, c='r')
     plt.show()
 
