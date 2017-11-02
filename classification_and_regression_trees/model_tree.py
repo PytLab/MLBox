@@ -44,8 +44,8 @@ def tree_predict(data, tree):
         return tree_predict(data, tree['right'])
 
 if '__main__' == __name__:
-    dataset = load_data('exp.txt')
-    tree = create_tree(dataset, fleaf, ferr, opt={'err_tolerance': 100, 'n_tolerance': 4})
+    dataset = load_data('exp2.txt')
+    tree = create_tree(dataset, fleaf, ferr, opt={'err_tolerance': 0.1, 'n_tolerance': 4})
 
     dataset = np.array(dataset)
     # 绘制散点图
