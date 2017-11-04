@@ -1,0 +1,11 @@
+digraph decision_tree {
+    "e1b05249-eb8e-4afd-837c-d2f5a5299a6a" [label="0: 0.508542"];
+    "b82d5e44-41de-40ec-8558-fad039b53058" [label="-2.64"];
+    "0b668e3e-42eb-4735-a6ba-420826ffc809" [label="0: 0.731636"];
+    "e1a950cd-cd46-4ce1-941e-c59c56377d2e" [label="107.69"];
+    "b2ee8f32-0401-4b83-a2ee-3f9212b6d8a1" [label="96.32"];
+    "e1b05249-eb8e-4afd-837c-d2f5a5299a6a" -> "b82d5e44-41de-40ec-8558-fad039b53058";
+    "e1b05249-eb8e-4afd-837c-d2f5a5299a6a" -> "0b668e3e-42eb-4735-a6ba-420826ffc809";
+    "0b668e3e-42eb-4735-a6ba-420826ffc809" -> "e1a950cd-cd46-4ce1-941e-c59c56377d2e";
+    "0b668e3e-42eb-4735-a6ba-420826ffc809" -> "b2ee8f32-0401-4b83-a2ee-3f9212b6d8a1";
+}

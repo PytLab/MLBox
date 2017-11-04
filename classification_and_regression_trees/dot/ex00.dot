@@ -1,0 +1,7 @@
+digraph decision_tree {
+    "ccd352d8-dbf6-4f59-ae0b-c983f39e5c87" [label="0: 0.50794"];
+    "46052817-27f4-4748-8f02-43ee4d2315dc" [label="-0.04"];
+    "b2df42be-284f-415f-8db7-18f807450a5b" [label="1.02"];
+    "ccd352d8-dbf6-4f59-ae0b-c983f39e5c87" -> "46052817-27f4-4748-8f02-43ee4d2315dc";
+    "ccd352d8-dbf6-4f59-ae0b-c983f39e5c87" -> "b2df42be-284f-415f-8db7-18f807450a5b";
+}
